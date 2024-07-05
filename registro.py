@@ -3,6 +3,7 @@
 import csv
 import random
 import os
+import time
 
 from os import system
 
@@ -128,47 +129,60 @@ def buscar():
 
 def modificar():
     ruta = r"D:\\WorkSpace\\worksspace\\registroTrabajadores\\listcsv.csv"
+    temp_file = r"D:\\WorkSpace\\worksspace\\registroTrabajadores\\Temp.csv"
 
     nombreModificar = input(
         'Ingrese el nombre del trabajdor a modificar>\t').strip()
     filas = []
     trabajador_encontrado = False
-
-    with open(ruta, 'r', newline='')as file_modify:
-        reader = csv.DictReader(file_modify, dialect='excel', delimiter=',')
-        reader.fieldnames
-        print(', '.join(reader.fieldnames))
-
-        for row in reader:
-            if row['Nombre'].strip() == nombreModificar:
-                nombre = input('Ingrese el nuevo nombre >\t').strip()
-                apellido = input('Ingrese el nuevo apellido >\t').strip()
-                edad = int(input('Ingrese la nueva edad >\t'))
-                cargo = input('Ingrese el nuevo cargo >\t').strip()
-
-                if nombre:
-                    row["Nombre"] = nombre
-                if apellido:
-                    row["Apellido"] = apellido
-                if edad:
-                    row["Edad"] = edad
-                if cargo:
-                    row["Cargo"] = cargo
-                trabajador_encontrado = True
-            filas.append(row)
-        if not trabajador_encontrado:
-            print(mn)
-            print('tarbajador no encontrado')
-            return
-        with open('ruta', 'w', newline='')as file_modify:
-            writer = csv.DictWriter(
+    try:
+        with open(ruta, 'r', newline='')as file_modify:
+            reader = csv.DictReader(
                 file_modify, dialect='excel', delimiter=',')
-            writer.writerheader()
-            writer.writerrows(filas)
+            reader.fieldnames
+            print(', '.join(reader.fieldnames))
 
-            print('El trabajador ha sido modificado con exito')
-            enter = input('Presione enter para continuar')
-            system('cls')
+            for row in reader:
+                if row['Nombre'].strip() == nombreModificar:
+                    nombre = input('Ingrese el nuevo nombre >\t').strip()
+                    apellido = input('Ingrese el nuevo apellido >\t').strip()
+                    edad = int(input('Ingrese la nueva edad >\t'))
+                    cargo = input('Ingrese el nuevo cargo >\t').strip()
+
+                    if nombre:
+                        row["Nombre"] = nombre
+                    if apellido:
+                        row["Apellido"] = apellido
+                    if edad:
+                        row["Edad"] = edad
+                    if cargo:
+                        row["Cargo"] = cargo
+                    trabajador_encontrado = True
+                filas.append(row)
+    except PermissionError as e:
+        print(f'{e} , no se puede modificar el archivo, porque se encuentra abierto')
+        print('cierre el archivo y vuelva a intentarlo')
+        return
+
+    if not trabajador_encontrado:
+        print(mn)
+        print('tarbajador no encontrado')
+        return
+    with open(temp_file, 'w', newline='')as file_modify:
+        write = csv.DictWriter(
+            file_modify, fieldnames=reader.fieldnames, dialect='excel', delimiter=',')
+        write.writeheader()
+        write.writerows(filas)
+
+        # esperar 1 segundo para que el usuario pueda leer el mensaje
+        time.sleep(2)
+
+    os.remove(ruta)  # borrar el archivo original
+    os.rename(temp_file, ruta)  # renombrar el archivo temporal
+
+    print('El trabajador ha sido modificado con exito')
+    enter = input('Presione enter para continuar')
+    system('cls')
 
 
 def menu():
