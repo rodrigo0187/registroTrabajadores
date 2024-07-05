@@ -3,6 +3,7 @@
 import csv
 import random
 import os
+from os import system
 
 # fin importar datos
 
@@ -77,3 +78,48 @@ def registro():
         writer.writerows(listaTrabajadores)
 
     print('El trabajador ha sido registrado con exito')
+
+
+def menu():
+    print(mn)
+    print('1 . Registro de Trabjadores')
+    print('2 . Listado de Trabajadores')
+    print('3 . Buscar por Tipo')
+    print('4 . Modificar Trabajador')
+    print('5 . Eliminar Trabajador')
+    print('6 . Salir')
+    print(mn)
+
+    while True:
+        try:
+            op = int(input('Ingrese la opcion deseada >\t'))
+            if not op:
+                print(mn)
+                raise ValueError('La opcion no puede estar vacia')
+            if op == 1:
+                print(mn)
+                registro()
+            if op == 2:
+                print(mn)
+                listado()
+            if op == 3:
+                print(mn)
+                buscar()
+            if op == 4:
+                print(mn)
+                modificar()
+            if op == 5:
+                print(mn)
+                eliminar()
+            if op == 6:
+                print(mn)
+                print('Gracias por usar el sistema')
+                system('cls')
+                exit()
+
+        except ValueError as e:
+            print(f'{e}')
+
+
+if __name__ == '__main__':
+    menu()
