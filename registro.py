@@ -3,6 +3,7 @@
 import csv
 import random
 import os
+
 from os import system
 
 # fin importar datos
@@ -12,7 +13,7 @@ mn = '='*30
 file = ('fileregistro.csv')
 cargos = ['CEO', 'Analista de datos', 'Programador', 'Desarrollador']
 listaTrabajadores = []
-encabezado = ['id_trabajador', 'Nombre', 'Apellido', 'Edad', 'Cargo']
+encabezado = ['id_Trabajador', 'Nombre', 'Apellido', 'Edad', 'Cargo']
 
 
 def registro():
@@ -59,7 +60,7 @@ def registro():
             print(f'{e}')
 
     listAux = {
-        "id_trabajador": id_trabajador,
+        "id_Trabajador": id_trabajador,
         "Nombre": nombre,
         "Apellido": apellido,
         "Edad": edad,
@@ -72,12 +73,102 @@ def registro():
     directory = os.path.dirname(ruta)
     os.makedirs(directory, exist_ok=True)
 
-    with open(ruta, 'a+', newline='') as file_input:
+    with open(ruta, 'w', newline='') as file_input:
+        file_input.seek(0)
         writer = csv.DictWriter(file_input, fieldnames=encabezado)
         writer.writeheader()
         writer.writerows(listaTrabajadores)
 
     print('El trabajador ha sido registrado con exito')
+    enter = input('Presione enter para continuar')
+    system('cls')
+
+
+def listado():
+    print(mn)
+    ruta = r"D:\\WorkSpace\\worksspace\\registroTrabajadores\\listcsv.csv"
+
+    with open(ruta, 'r', newline='') as file_reader:
+        reader = csv.DictReader(file_reader, dialect='excel', delimiter=',')
+        reader.fieldnames
+        print(', '.join(reader.fieldnames))
+        for row in reader:
+            print(f'{row["id_Trabajador"]} {row["Nombre"]} {
+                  row["Apellido"]} {row["Edad"]} {row["Cargo"]}')
+        enter = input('Presione enter para continuar')
+        system('cls')
+
+
+def buscar():
+    print(mn)
+    ruta = r"D:\\WorkSpace\\worksspace\\registroTrabajadores\\listcsv.csv"
+    with open(ruta, 'r', newline='') as file_reader:
+        reader = csv.DictReader(file_reader, dialect='excel', delimiter=',')
+        reader.fieldnames
+        print(', '.join(reader.fieldnames))
+        while True:
+            try:
+                tipo = input(f'Ingrese el tipo de cargo {cargos} >\t')
+                if tipo not in cargos or not tipo.strip():
+                    print(mn)
+                    print('el cargo no es valido')
+                    raise ValueError('El campo no puede estar vacio')
+                break
+            except ValueError as e:
+                print(f'{e}')
+        for row in reader:
+            if row['Cargo'] == tipo:
+                print(f'{row["id_Trabajador"]} {row["Nombre"]} {
+                    row["Apellido"]} {row["Edad"]} {row["Cargo"]}')
+
+        print(mn)
+        enter = input('Presione enter para continuar')
+        system('cls')
+
+
+def modificar():
+    ruta = r"D:\\WorkSpace\\worksspace\\registroTrabajadores\\listcsv.csv"
+
+    nombreModificar = input(
+        'Ingrese el nombre del trabajdor a modificar>\t').strip()
+    filas = []
+    trabajador_encontrado = False
+
+    with open(ruta, 'r', newline='')as file_modify:
+        reader = csv.DictReader(file_modify, dialect='excel', delimiter=',')
+        reader.fieldnames
+        print(', '.join(reader.fieldnames))
+
+        for row in reader:
+            if row['Nombre'].strip() == nombreModificar:
+                nombre = input('Ingrese el nuevo nombre >\t').strip()
+                apellido = input('Ingrese el nuevo apellido >\t').strip()
+                edad = int(input('Ingrese la nueva edad >\t'))
+                cargo = input('Ingrese el nuevo cargo >\t').strip()
+
+                if nombre:
+                    row["Nombre"] = nombre
+                if apellido:
+                    row["Apellido"] = apellido
+                if edad:
+                    row["Edad"] = edad
+                if cargo:
+                    row["Cargo"] = cargo
+                trabajador_encontrado = True
+            filas.append(row)
+        if not trabajador_encontrado:
+            print(mn)
+            print('tarbajador no encontrado')
+            return
+        with open('ruta', 'w', newline='')as file_modify:
+            writer = csv.DictWriter(
+                file_modify, dialect='excel', delimiter=',')
+            writer.writerheader()
+            writer.writerrows(filas)
+
+            print('El trabajador ha sido modificado con exito')
+            enter = input('Presione enter para continuar')
+            system('cls')
 
 
 def menu():
@@ -98,15 +189,21 @@ def menu():
                 raise ValueError('La opcion no puede estar vacia')
             if op == 1:
                 print(mn)
+                print('Registro de Trabajadores')
+                print(mn)
                 registro()
             if op == 2:
+                print(mn)
+                print('Listado de Trabajadores')
                 print(mn)
                 listado()
             if op == 3:
                 print(mn)
+                system('cls')
                 buscar()
             if op == 4:
                 print(mn)
+                system('cls')
                 modificar()
             if op == 5:
                 print(mn)
