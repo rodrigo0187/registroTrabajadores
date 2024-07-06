@@ -185,6 +185,20 @@ def modificar():
     system('cls')
 
 
+def eliminar():
+    ruta = r"D:\\WorkSpace\\worksspace\\registroTrabajadores\\listcsv.csv"
+    temp_file = r"D:\\WorkSpace\\worksspace\\registroTrabajadores\\Temp.csv"
+    nombreEliminar = input(
+        'Ingrese el nombre del trabajador a eliminar>\t').strip()
+    filas = []
+    trabajador_encontrado = False
+    nombreEliminar = input(
+        'Ingrese el nombre y apellido del trabajador a elminar >\t').strip()
+
+    with open(ruta, 'r', newline='')as file_eliminar:
+        reader = csv.DictReader(file_eliminar, dialect='excel', delimiter=',')
+
+
 def menu():
     print(mn)
     print('1 . Registro de Trabjadores')
